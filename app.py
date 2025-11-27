@@ -130,7 +130,6 @@ def main():
                 config_voyage_key = None
             
             voyage_api_key = (
-                st.session_state.get('voyage_api_key') or 
                 config_voyage_key or 
                 os.getenv('VOYAGE_API_KEY')
             )
@@ -234,7 +233,6 @@ def main():
                         
                         # Use Together AI (FREE!) for suggestions
                         together_api_key = (
-                            st.session_state.get('together_api_key') or 
                             config_together_key or 
                             os.getenv('TOGETHER_API_KEY')
                         )
@@ -291,38 +289,6 @@ def main():
     
     # Sidebar with options
     with st.sidebar:
-        st.markdown("### 🔑 API Configuration")
-        st.markdown("**Required API Keys:**")
-        
-        # Try to get keys from config first
-        try:
-            from config import VOYAGE_API_KEY as config_voyage, TOGETHER_API_KEY as config_together
-        except ImportError:
-            config_voyage = None
-            config_together = None
-        
-        voyage_key = st.text_input(
-            "Voyage AI API Key",
-            value=st.session_state.get('voyage_api_key', '') or config_voyage or os.getenv('VOYAGE_API_KEY', ''),
-            type="password",
-            help="For embeddings (voyage-lite-02-instruct). Can also be set in config.py"
-        )
-        if voyage_key:
-            st.session_state.voyage_api_key = voyage_key
-        
-        together_key = st.text_input(
-            "Together AI API Key (FREE!)",
-            value=st.session_state.get('together_api_key', '') or config_together or os.getenv('TOGETHER_API_KEY', ''),
-            type="password",
-            help="Get FREE key at https://api.together.xyz/settings/api-keys - $25 free credits! If not set, enhanced fallback responses will be used."
-        )
-        if together_key:
-            st.session_state.together_api_key = together_key
-            st.success("Together AI Key set! 🚀")
-        else:
-            st.info("💡 Get a FREE Together AI key at https://api.together.xyz/settings/api-keys ($25 free credits!)")
-        
-        st.markdown("---")
         st.markdown("### 💡 About This Chat")
         st.markdown("""
         This is an AI-powered support chat that:
@@ -331,6 +297,18 @@ def main():
         - Maintains conversation context
         
         **Important**: This is not a replacement for professional mental health care.
+        """)
+        
+        st.markdown("---")
+        st.markdown("### 🔑 API Keys")
+        st.markdown("""
+        **For developers:** API keys are loaded from:
+        - Environment variables (recommended for production)
+        - `config.py` file (for local development)
+        
+        **Streamlit Cloud:** Add keys in Settings → Secrets
+        
+        The app works without API keys using enhanced fallback responses.
         """)
         
         st.markdown("---")
