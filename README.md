@@ -1,6 +1,6 @@
-# Emotion Detection & Support System
+# AI-Powered Mental Health Support Chat System
 
-A complete 3-agent AI pipeline for emotion detection and supportive suggestion generation, built with Python and Streamlit.
+A complete 3-agent AI pipeline for emotion detection and supportive suggestion generation, built with Python and Streamlit. This system provides real-time emotion analysis and contextual, empathetic responses through a conversational chat interface.
 
 ## 🏗️ System Architecture
 
@@ -8,9 +8,10 @@ This project implements a 3-agent pipeline:
 
 1. **NLP Agent** - Converts text to embeddings using Voyage AI API (`voyage-lite-02-instruct`)
 2. **Emotion Detection Agent** - RoBERTa-based emotion classifier:
-   - j-hartmann/emotion-english-distilroberta-base
+   - `j-hartmann/emotion-english-distilroberta-base`
    - Pre-trained model for emotion classification (6 basic emotions)
-3. **Suggestion Agent** - Generates supportive advice using Together API or Hugging Face as backup
+   - Runs locally (no API needed)
+3. **Suggestion Agent** - Generates supportive advice using Together AI API (Mixtral-8x7B - FREE tier!) with enhanced fallback system
 
 ## 📁 Project Structure
 
@@ -19,8 +20,8 @@ This project implements a 3-agent pipeline:
 ├── agents/
 │   ├── __init__.py
 │   ├── nlp_agent.py          # Embedding generator (Voyage AI)
-│   ├── emotion_agent.py      # Emotion classifier (RoBERTa)
-│   └── suggestion_agent.py  # Suggestion generator (Llama3 API)
+│   ├── emotion_agent.py      # Emotion classifier (RoBERTa - Local)
+│   └── suggestion_agent.py   # Response generator (Together AI + Fallback)
 ├── app.py                    # Main Streamlit application
 ├── config.py                 # API keys configuration
 ├── requirements.txt          # Python dependencies
@@ -66,20 +67,20 @@ This project implements a 3-agent pipeline:
    ```python
    # Edit config.py and set your keys:
    VOYAGE_API_KEY = "your_voyage_api_key_here"
-   OPENROUTER_API_KEY = "your_openrouter_api_key_here"  # FREE! (Recommended for better responses)
+   TOGETHER_API_KEY = "your_together_api_key_here"  # FREE! ($25 free credits, no credit card)
    ```
    
    **Option B: Set environment variables**
    ```bash
    export VOYAGE_API_KEY="your_voyage_api_key"
-   export OPENROUTER_API_KEY="your_openrouter_api_key"  # FREE! (Recommended)
+   export TOGETHER_API_KEY="your_together_api_key"  # FREE!
    ```
    
    **Option C: Enter API keys in the Streamlit app sidebar**
    
    Get your API keys:
    - Voyage AI: https://www.voyageai.com/
-   - OpenRouter: https://openrouter.ai/keys (FREE tier available! Recommended for better contextual responses)
+   - Together AI: https://api.together.xyz/settings/api-keys (FREE tier: $25 free credits, no credit card needed!)
 
 4. **Run the Streamlit app:**
    ```bash
@@ -90,56 +91,83 @@ The app will open in your default web browser at `http://localhost:8501`
 
 ## 💻 Usage
 
-1. Enter your thoughts or feelings in the text input box
-2. Click "Analyze Emotion" button
+1. Enter your thoughts or feelings in the chat input box
+2. Click "Send" or press Enter
 3. View the detected emotion, confidence score, and supportive suggestions
+4. Continue the conversation - the system maintains context across messages
 
 ## 🔧 Technical Details
 
 ### NLP Agent
-- Model: `voyage-lite-02-instruct` via Voyage AI API
-- Output: High-quality embedding vectors
-- Purpose: Convert natural language text to numerical representations
-- API: Requires Voyage AI API key
+- **Model**: `voyage-lite-02-instruct` via Voyage AI API
+- **Output**: High-quality embedding vectors (1024 dimensions)
+- **Purpose**: Convert natural language text to numerical representations
+- **API**: Requires Voyage AI API key
 
 ### Emotion Detection Agent
-- Model: Pre-trained RoBERTa-based emotion classifier
+- **Model**: Pre-trained RoBERTa-based emotion classifier
   - `j-hartmann/emotion-english-distilroberta-base`: 6 basic emotions (joy, sadness, anger, fear, surprise, disgust)
-- Input: Raw text (no embeddings needed)
-- Output: 6 emotion classes (happiness, sadness, anger, anxiety, frustration, depression)
-- Method: Maps 6 basic emotions to standard emotion set
-- Framework: HuggingFace Transformers (runs locally)
+- **Input**: Raw text (no preprocessing needed)
+- **Output**: 
+  - Primary emotion label (1 of 6 emotions)
+  - Confidence score (0-100%)
+  - Top 3 emotions with probabilities
+- **Emotions Detected**:
+  1. Happiness (😊)
+  2. Sadness (😢)
+  3. Anger (😠)
+  4. Anxiety (😰)
+  5. Frustration (😤)
+  6. Depression (😔)
+- **Framework**: HuggingFace Transformers (runs locally)
+- **Special Features**:
+  - Context-aware keyword analysis
+  - Handles sarcasm and context
+  - Robust error handling
+  - Runs on CPU or GPU (auto-detects)
 
 ### Suggestion Agent
-- Model: `Mixtral-8x7B-Instruct-v0.1' via TOGETHER API (or Mistral-7B via Hugging Face as backup)
-- Purpose: Generate contextual, supportive, non-medical advice sentences
-- Framework: API-based
-- Note: Uses user's actual message for context-aware responses. OpenRouter provides better quality responses with free tier
+- **Model**: `mistralai/Mixtral-8x7B-Instruct-v0.1` via Together AI API (primary)
+- **Architecture**: Mixtral-8x7B (Mixture of Experts, 8x7B parameters)
+- **Purpose**: Generate contextual, supportive, non-medical advice
+- **Framework**: API-based (Together AI - FREE tier available!)
+- **Features**:
+  - Context-aware responses (references user's actual message)
+  - Conversation history integration (last 4 messages)
+  - Enhanced fallback system (works without API)
+  - Message alternation validation (for API compatibility)
+- **Fallback Options**:
+  - Together AI (primary) - FREE tier with $25 credits
+  - OpenRouter (optional backup)
+  - Enhanced rule-based fallback (works offline)
 
 ## 📝 Notes
 
 - **API Keys Required**: 
   - Voyage AI API key for embeddings
-  - OpenRouter API key for suggestions (FREE tier available! Recommended for better responses)
-  - Hugging Face API key as backup option
+  - Together AI API key for suggestions (FREE tier available! $25 free credits, no credit card needed)
   - Keys can be set in config.py, via environment variables, or in the app sidebar
 - **Emotion Model**: Runs locally (no API needed)
 - **First Run**: Emotion model will be downloaded automatically (~300MB)
 - **API Costs**: 
   - Voyage AI: Check their pricing
-  - OpenRouter: FREE tier available! Get key at https://openrouter.ai/keys (recommended for better contextual responses)
-  - Hugging Face: FREE! Available as backup option
-- **Internet Required**: API calls require internet connection
-- **Context-Aware Responses**: The system now uses your actual message for more relevant, contextual suggestions
+  - Together AI: FREE tier available! Get key at https://api.together.xyz/settings/api-keys ($25 free credits)
+- **Internet Required**: API calls require internet connection (but fallback works offline)
+- **Context-Aware Responses**: The system uses your actual message and conversation history for more relevant, contextual suggestions
+- **Chat Interface**: Full conversational experience with message history and session statistics
 
 ## 🎯 Features
 
-- Clean, user-friendly Streamlit interface
-- Real-time emotion detection
-- Confidence scores for predictions
-- Emotion-specific supportive suggestions
-- Emoji indicators for emotions
-- Fully modular, well-commented code
+- **Chat-Based Interface**: Natural conversation flow using Streamlit's chat components
+- **Real-Time Emotion Detection**: Instant analysis as user types
+- **Visual Emotion Badges**: Color-coded emotion indicators with emojis
+- **Confidence Scores**: Transparent emotion prediction confidence (0-100%)
+- **Top 3 Emotions Display**: Shows primary + 2 other detected emotions
+- **Session Statistics**: Tracks messages and emotion distribution
+- **Clear Chat History**: Button to reset conversation
+- **Responsive Design**: Works on desktop and mobile browsers
+- **Conversation Memory**: Maintains context across messages
+- **Enhanced Fallback**: Works even without API keys (rule-based responses)
 
 ## ⚠️ Important Disclaimer
 
@@ -147,23 +175,37 @@ This system is for demonstration purposes only. It provides non-medical, support
 
 ## 📦 Dependencies
 
-- `streamlit`: Web application framework
-- `sentence-transformers`: Text embedding generation
-- `torch`: Deep learning framework (PyTorch)
-- `transformers`: HuggingFace transformers library
-- `numpy`: Numerical computing
-- `scikit-learn`: Machine learning utilities
+- `streamlit>=1.28.0`: Web application framework
+- `torch>=2.0.0`: Deep learning framework (PyTorch)
+- `transformers>=4.35.0`: HuggingFace transformers library
+- `numpy>=1.24.0`: Numerical computing
+- `scikit-learn>=1.3.0`: Machine learning utilities
+- `accelerate>=0.24.0`: Model optimization
+- `requests>=2.31.0`: HTTP requests for API calls
 
 ## 🔄 Future Enhancements
 
 - Train the emotion detection model on a real emotion dataset
 - Add model persistence and checkpoint saving
 - Implement batch processing for multiple texts
-- Add emotion history tracking
+- Add emotion history tracking across sessions
 - Include more detailed probability distributions
+- User authentication and conversation history persistence
+- Crisis detection and intervention protocols
+- Multi-language support
 
 ## 📄 License
 
 This project is provided as-is for educational and demonstration purposes.
 
+## 🤝 Contributing
 
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Support
+
+For issues, questions, or suggestions, please open an issue on the GitHub repository.
+
+---
+
+**Built with ❤️ using Python, Streamlit, and state-of-the-art AI models**
