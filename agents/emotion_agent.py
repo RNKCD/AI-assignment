@@ -13,7 +13,7 @@ class EmotionAgent:
     Emotion Detection Agent that accurately classifies emotions from text.
     """
     
-    # Standard emotion labels
+   
     EMOTIONS = ['happiness', 'sadness', 'anger', 'anxiety', 'frustration', 'depression']
     
     def __init__(self):
@@ -23,7 +23,7 @@ class EmotionAgent:
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"Using device: {self.device}")
         
-        # Use a reliable, well-maintained model
+    
         model_name = 'j-hartmann/emotion-english-distilroberta-base'
         print(f"Loading {model_name}...")
         
@@ -32,7 +32,7 @@ class EmotionAgent:
         self.model.to(self.device)
         self.model.eval()
         
-        # Model labels: joy, sadness, anger, fear, surprise, disgust
+    
         self.model_labels = ['joy', 'sadness', 'anger', 'fear', 'surprise', 'disgust']
         
         print("Emotion Detection Agent initialized!")
@@ -73,7 +73,6 @@ class EmotionAgent:
         text_lower = text.lower()
         emotion_lower = model_emotion.lower()
         
-        # Context-based detection FIRST (more accurate)
         # Check for frustration indicators
         frustration_keywords = [
             'tired of', 'sick of', 'fed up', 'frustrat', 'stuck', 'can\'t', 
@@ -192,3 +191,4 @@ class EmotionAgent:
             final_scores = {k: v / total for k, v in final_scores.items()}
         
         return final_scores
+
