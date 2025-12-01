@@ -10,7 +10,7 @@ This project implements a 3-agent pipeline:
 2. **Emotion Detection Agent** - RoBERTa-based emotion classifier:
    - j-hartmann/emotion-english-distilroberta-base
    - Pre-trained model for emotion classification (6 basic emotions)
-3. **Suggestion Agent** - Generates supportive advice using OpenRouter API (Gemini Flash - FREE!) or Hugging Face as backup
+3. **Suggestion Agent** - Generates supportive advice using Together API or Hugging Face as backup
 
 ## 📁 Project Structure
 
@@ -111,9 +111,9 @@ The app will open in your default web browser at `http://localhost:8501`
 - Framework: HuggingFace Transformers (runs locally)
 
 ### Suggestion Agent
-- Model: `google/gemini-flash-1.5` via OpenRouter API (or Mistral-7B via Hugging Face as backup)
+- Model: `Mixtral-8x7B-Instruct-v0.1' via TOGETHER API (or Mistral-7B via Hugging Face as backup)
 - Purpose: Generate contextual, supportive, non-medical advice sentences
-- Framework: API-based (OpenRouter - FREE tier available!)
+- Framework: API-based
 - Note: Uses user's actual message for context-aware responses. OpenRouter provides better quality responses with free tier
 
 ## 📝 Notes
