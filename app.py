@@ -1,5 +1,5 @@
 """
-Streamlit App - Emotion Detection and Support System (Chat Interface)
+Streamlit App - Emotion Detection and Support System 
 Main application that integrates all three agents in a conversational format.
 """
 
@@ -143,7 +143,7 @@ def main():
     if not st.session_state.conversation_started:
         welcome_msg = {
             'role': 'assistant',
-            'content': "Hello! I'm here to listen and provide support. Feel free to share what's on your mind - your thoughts, feelings, or anything you'd like to talk about. How are you feeling today?",
+            'content': "Hello! I'm here to listen and provide support. Feel free to share what's on your mind. So, tell me about your day.",
             'emotion': None,
             'confidence': None,
             'timestamp': datetime.now()
