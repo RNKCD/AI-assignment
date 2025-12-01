@@ -1,5 +1,4 @@
 """
-NLP Agent - Embedding Generator
 Converts user text into numerical embeddings using Voyage AI API.
 """
 
@@ -7,7 +6,6 @@ import numpy as np
 import os
 import requests
 
-# Try to import config, fallback to environment variables
 try:
     from config import VOYAGE_API_KEY, VOYAGE_API_URL, VOYAGE_MODEL
 except ImportError:
@@ -17,10 +15,6 @@ except ImportError:
 
 
 class NLPAgent:
-    """
-    NLP Agent that generates embeddings from text using Voyage AI API.
-    Uses the 'voyage-lite-02-instruct' model via API.
-    """
     
     def __init__(self, api_key=None):
         """
@@ -117,3 +111,4 @@ class NLPAgent:
         embeddings = np.array([item['embedding'] for item in data['data']])
         
         return embeddings
+
