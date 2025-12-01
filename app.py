@@ -341,7 +341,7 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #999; font-size: 0.8rem; margin-top: 2rem;'>
-        <p>Built with ❤️ using Streamlit, PyTorch, and HuggingFace Transformers</p>
+        <p>Built using Streamlit, PyTorch, and HuggingFace Transformers</p>
         <p><small>For professional mental health support, please consult qualified healthcare providers.</small></p>
     </div>
     """, unsafe_allow_html=True)
