@@ -1,6 +1,5 @@
 """
 Suggestion Agent - Contextual Response Generator
-Generates responses based ONLY on the user's actual conversation.
 """
 
 import os
@@ -32,7 +31,7 @@ class SuggestionAgent:
         
         # Priority: Together AI (free) > OpenRouter > Hugging Face > Fallback
         if use_together:
-            # Use Together AI (FREE - $25 free credits!)
+            # Use Together AI
             self.api_key = api_key or TOGETHER_API_KEY or os.getenv('TOGETHER_API_KEY')
             if self.api_key:
                 self.api_url = TOGETHER_API_URL
@@ -101,9 +100,6 @@ Your task:
                 "content": system_prompt
             }
         ]
-        
-        # Build messages with proper alternation for Together AI
-        # Together AI requires: system (optional), then MUST start with user, then strict alternation: user/assistant/user/assistant/...
         
         # Add conversation history if available, ensuring proper alternation
         # CRITICAL: After system, first message MUST be 'user', not 'assistant'
@@ -428,3 +424,4 @@ Here are some general suggestions that might help:
 5. **Remember this is temporary**: Feelings change, and difficult times pass. You've gotten through challenges before, and you can get through this too.
 
 I'm here to listen. Would you like to share more about what's on your mind? Sometimes talking through things can help us see them from a different perspective."""
+
